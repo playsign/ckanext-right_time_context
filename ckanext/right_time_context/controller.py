@@ -143,6 +143,9 @@ class ProxyNGSIController(base.BaseController):
         if resource.get('service_path', '') != '':
             headers['FIWARE-ServicePath'] = resource['service_path']
 
+        #CityIoT special --antont
+        headers['Platform-Apikey'] = "secret"
+
         url = resource['url']
         parsed_url = urlparse.urlsplit(url)
 
