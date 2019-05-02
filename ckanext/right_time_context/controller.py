@@ -37,10 +37,16 @@ log = getLogger(__name__)
 
 CHUNK_SIZE = 512
 
+import sys
+print "right_time_context controller.py in %s" % __file__
 
 class ProxyNGSIController(base.BaseController):
-
     def _proxy_query_resource(self, resource, parsed_url, headers, verify=True):
+
+        print "_proxy_query_resource:"
+        print resource
+        print parsed_url
+        print "--------"
 
         if parsed_url.path.lower().find('/v1/querycontext') != -1:
             if resource.get("payload", "").strip() == "":
@@ -146,8 +152,17 @@ class ProxyNGSIController(base.BaseController):
         #CityIoT special --antont
         headers['Platform-Apikey'] = "secret"
 
+        #print "========================="
         url = resource['url']
         parsed_url = urlparse.urlsplit(url)
+        #print "url:", url
+
+        #another CityIoT hack, for having port in NGSI view
+        netloc_with_port = parsed_url.netloc + ":5000"
+        url = urlparse.urlunsplit((parsed_url.scheme, netloc_with_port, parsed_url.path, parsed_url.query, parsed_url.fragment))
+        resource['url'] = url #resource is what is passed to url creation methods below
+        #print " => ", resource['url']
+        #print "========================="
 
         if parsed_url.scheme not in ("http", "https") or not parsed_url.netloc:
             base.abort(409, detail='Invalid URL.')
