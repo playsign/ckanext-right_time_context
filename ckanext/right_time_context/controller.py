@@ -157,13 +157,6 @@ class ProxyNGSIController(base.BaseController):
         parsed_url = urlparse.urlsplit(url)
         #print "url:", url
 
-        #another CityIoT hack, for having port in NGSI view
-        netloc_with_port = parsed_url.netloc + ":5000"
-        url = urlparse.urlunsplit((parsed_url.scheme, netloc_with_port, parsed_url.path, parsed_url.query, parsed_url.fragment))
-        resource['url'] = url #resource is what is passed to url creation methods below
-        #print " => ", resource['url']
-        #print "========================="
-
         if parsed_url.scheme not in ("http", "https") or not parsed_url.netloc:
             base.abort(409, detail='Invalid URL.')
 
